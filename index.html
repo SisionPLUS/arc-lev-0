@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Not available</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: monospace, sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none; /* 클릭 시 드래그 방지 */
+    }
+    .text-container {
+      font-size: 2rem;
+      letter-spacing: 2px;
+    }
+    .clickable {
+      cursor: pointer;
+    }
+    .clickable:hover {
+      opacity: 0.8;
+    }
+    .wrong-target {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="text-container" id="display">
+    <span id="char-N" class="clickable" onclick="clickN()">N</span><span id="char-O">o</span><span id="char-T">t</span> <span class="wrong-target" onclick="goNotAvailable()">available</span>
+  </div>
+
+  <script>
+    let step = 0;
+
+    function clickN() {
+      if (step === 0) {
+        step = 1;
+        document.getElementById('display').innerHTML = 
+          '<span id="char-O" class="clickable" onclick="clickO()">o</span><span id="char-T">t</span> <span class="wrong-target" onclick="goNotAvailable()">available</span>';
+      }
+    }
+
+    function clickO() {
+      if (step === 1) {
+        step = 2;
+        document.getElementById('display').innerHTML = 
+          '<span id="char-T" class="clickable" onclick="clickT()">t</span> <span class="wrong-target" onclick="goNotAvailable()">available</span>';
+      }
+    }
+
+    function clickT() {
+      if (step === 2) {
+        step = 3;
+        // NOT이 모두 지워지면 대문자 Available로 바뀌고 클릭 시 ../available/로 이동
+        document.getElementById('display').innerHTML = 
+          '<span class="clickable" onclick="goAvailable()">Available</span>';
+      }
+    }
+
+    function goNotAvailable() {
+      window.location.href = "./NotAvailable/";
+    }
+
+    function goAvailable() {
+      window.location.href = "./available/";
+    }
+  </script>
+</body>
+</html>
