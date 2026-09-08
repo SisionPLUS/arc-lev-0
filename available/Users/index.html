@@ -16,12 +16,11 @@
   <h1>Index of /Users/</h1>
   <ul>
     <li><a onclick="checkUserAccess()">📁 User/</a></li>
-    <li><a href="./공용/">📁 공용/</a></li>
+    <li><a href="./Public/">📁 Public/</a></li>
   </ul>
 
   <script>
     function checkUserAccess() {
-      // answer(true)를 해야만 열림
       const unlocked = localStorage.getItem('user_unlocked');
       if (unlocked === 'true') {
         window.location.href = "./User/";
