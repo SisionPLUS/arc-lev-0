@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Index of /available/</title>
+  <style>
+    body {
+      background-color: #fff;
+      color: #000;
+      font-family: monospace, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+    }
+    table {
+      width: 100%;
+      max-width: 800px;
+      border-collapse: collapse;
+      margin-top: 15px;
+      text-align: left;
+    }
+    th, td {
+      padding: 5px 10px;
+      font-size: 0.95rem;
+    }
+    th {
+      border-bottom: 1px solid #000;
+    }
+    a {
+      color: #0000ee;
+      text-decoration: underline;
+    }
+    a:visited {
+      color: #551a8b;
+    }
+    .size, .date {
+      color: #555;
+    }
+    hr {
+      border: 0;
+      border-top: 1px solid #ccc;
+      margin: 20px 0;
+      max-width: 800px;
+    }
+    /* 이스터에그 드래그 텍스트 */
+    .hidden-row {
+      color: #fff; /* 흰 배경에 흰 글씨라 드래그해야만 보임! */
+      user-select: text;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Index of /available/</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Last modified</th>
+        <th>Size</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="../">Parent Directory</a></td>
+        <td class="date">-</td>
+        <td class="size">-</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td><a href="#" onclick="alert('ACCESS DENIED: 이 파일은 락이 걸려있습니다.')">LOG_20260908.log</a></td>
+        <td class="date">2026-09-08 09:34</td>
+        <td class="size">4.2KB</td>
+        <td>System Log File</td>
+      </tr>
+      <tr>
+        <td><a href="#" onclick="alert('ERR_FILE_NOT_FOUND: 원본 파일이 지워졌습니다.')">subject_00.dat</a></td>
+        <td class="date">1999-12-31 23:59</td>
+        <td class="size">0B</td>
+        <td><span style="color: red;">[CORRUPTED]</span></td>
+      </tr>
+      <tr>
+        <td><a href="#" onclick="goSecret()">.hidden_archive/</a></td>
+        <td class="date">2026-09-08 00:00</td>
+        <td class="size">-</td>
+        <td>Directory</td>
+      </tr>
+      <!-- 👁️ 마우스로 드래그해야만 보이는 숨겨진 행 -->
+      <tr class="hidden-row">
+        <td>DO_NOT_LOOK.txt</td>
+        <td>???</td>
+        <td>666B</td>
+        <td>진실을 보았는가?</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr>
+  <address>Apache/2.4.52 (Ubuntu) Server at arc-lev-0.kro.kr Port 80</address>
+
+  <script>
+    console.log("%c[DIRECTORY AUDIT]", "color: red; font-size: 14px;");
+    console.log("경고: 파일 목록 하단 공백 영역을 드래그해 보았는가?");
+
+    function goSecret() {
+      alert("접근 권한 확인 중... 이동합니다.");
+      // 다음 이동할 경로 (원하는 디렉토리로 변경 가능)
+      window.location.href = "../secret/";
+    }
+  </script>
+</body>
+</html>
