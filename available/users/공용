@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>C:\Users\공용의 색인</title>
+  <style>
+    body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 20px 40px; }
+    h1 { font-size: 2rem; }
+    ul { list-style: none; padding: 0; font-size: 1.1rem; }
+    li { margin: 10px 0; }
+    a { color: #fff; text-decoration: underline; }
+    a:hover { color: #8ab4f8; }
+  </style>
+</head>
+<body>
+  <h1>Index of /Users/공용/</h1>
+  <ul>
+    <li><a href="./Server/">📁 Server/</a></li>
+  </ul>
+</body>
+</html>
