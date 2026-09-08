@@ -52,7 +52,6 @@
       color: #8ab4f8;
     }
 
-    /* 하단 커스텀 텍스트 뷰어 */
     #viewer-box {
       display: none;
       position: fixed;
@@ -101,14 +100,13 @@
       </tr>
     </thead>
     <tbody>
-      <!-- 지정된 3개 폴더 -->
       <tr>
-        <td><a onclick="showContent('📁 Boot/', '부팅 구성 데이터가 손상되었습니다.')">📁 Boot/</a></td>
+        <td><a href="./Boot/">📁 Boot/</a></td>
         <td class="size"></td>
         <td class="date">26. 9. 8. 오전 9:00:12</td>
       </tr>
       <tr>
-        <td><a onclick="showContent('📁 Users/', '사용자 디렉토리에 접근할 수 없습니다.')">📁 Users/</a></td>
+        <td><a href="./Users/">📁 Users/</a></td>
         <td class="size"></td>
         <td class="date">26. 9. 8. 오전 9:02:41</td>
       </tr>
@@ -118,7 +116,6 @@
         <td class="date">26. 9. 8. 오전 9:05:19</td>
       </tr>
 
-      <!-- 지정된 4개 파일 -->
       <tr>
         <td><a onclick="showContent('howtorun.txt', '실행하는 방법은.. RjEyIENvbnNvbGUsIGFuZCBydW4gInRyaWdnZXIocnVuKSI=')">📄 howtorun.txt</a></td>
         <td class="size">1.1 kB</td>
@@ -142,7 +139,6 @@
     </tbody>
   </table>
 
-  <!-- 하단 텍스트 뷰어 박스 -->
   <div id="viewer-box">
     <div id="viewer-title">
       <span id="file-title">FILE</span>
@@ -162,15 +158,30 @@
       document.getElementById('viewer-box').style.display = 'none';
     }
 
-    // Base64 힌트(F12 Console, and run "trigger(run)")를 직접 실행할 사람을 위한 F12 이스터에그
-    function trigger(param) {
-      if(param === 'run') {
-        console.log("%c[SYSTEM OVERRIDE SUCCESS]", "color: #00ff66; font-size: 16px;");
-        alert("시스템 트리거 발동: 다음 비밀 주소는 /secret 입니다.");
-      } else {
-        console.log("사용법: trigger(run) 코드를 입력하세요.");
+    // 콘솔 트리거 함수 (문자열 체크 검증)
+    window.trigger = function(param) {
+      if (typeof param !== 'string') {
+        console.log("%c[오류] 문법오류 : trigger값 뒤 괄호에는 string이 와야합니다.", "color: #ff5555; font-weight: bold;");
+        return;
       }
-    }
+      if (param === 'run') {
+        console.log("%c[SUCCESS] 시스템 오버라이드 승인됨.", "color: #00ff66;");
+      }
+    };
+
+    // 권한 해제용 answer 함수 (boolean 입력 받음)
+    window.answer = function(val) {
+      if (typeof val !== 'boolean') {
+        console.log("[오류] answer() 안에는 boolean(true/false) 값을 입력해야 합니다.");
+        return;
+      }
+      localStorage.setItem('user_unlocked', val);
+      if(val === true) {
+        console.log("[권한 갱신] User 폴더의 잠금이 해제되었습니다.");
+      } else {
+        console.log("[권한 갱신] 잠금이 유지됩니다.");
+      }
+    };
   </script>
 </body>
 </html>
