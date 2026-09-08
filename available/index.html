@@ -170,18 +170,48 @@
     };
 
     // 권한 해제용 answer 함수 (boolean 입력 받음)
-    window.answer = function(val) {
-      if (typeof val !== 'boolean') {
-        console.log("[오류] answer() 안에는 boolean(true/false) 값을 입력해야 합니다.");
-        return;
-      }
-      localStorage.setItem('user_unlocked', val);
-      if(val === true) {
-        console.log("[권한 갱신] User 폴더의 잠금이 해제되었습니다.");
-      } else {
-        console.log("[권한 갱신] 잠금이 유지됩니다.");
-      }
-    };
+    <script>
+  function showContent(title, text) {
+    document.getElementById('file-title').innerText = title;
+    document.getElementById('viewer-content').innerText = text;
+    document.getElementById('viewer-box').style.display = 'block';
+  }
+
+  function closeViewer() {
+    document.getElementById('viewer-box').style.display = 'none';
+  }
+
+  // 1. trigger 함수 (string 검증)
+  window.trigger = function() {
+    const param = arguments[0];
+    if (typeof param !== 'string') {
+      console.log("%c[오류] 문법오류 : trigger값 뒤 괄호에는 string이 와야합니다.", "color: #ff5555; font-weight: bold;");
+      return;
+    }
+    if (param === 'run') {
+      console.log("%c[SUCCESS] 시스템 오버라이드 승인됨.", "color: #00ff66;");
+    }
+  };
+
+  // 2. answer 함수 (자동완성 스포일러 완전 차단)
+  // 괄호 안에 아무것도 쓰지 않아서 콘솔에 answer() 로만 찍힘!
+  window.answer = function() {
+    const val = arguments[0];
+    
+    if (typeof val !== 'boolean') {
+      console.log("%c[ERR] Invalid argument type.", "color: #ff5555;");
+      return;
+    }
+
+    if (val === true) {
+      localStorage.setItem('user_unlocked', 'true');
+      console.log("%c[SUCCESS] User directory access granted.", "color: #00ff66; font-weight: bold;");
+    } else {
+      localStorage.setItem('user_unlocked', 'false');
+      console.log("%c[INFO] Access locked.", "color: #ffaa00;");
+    }
+  };
+</script>
   </script>
 </body>
 </html>
