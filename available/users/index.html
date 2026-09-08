@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>C:\Users의 색인</title>
+  <style>
+    body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 20px 40px; }
+    h1 { font-size: 2rem; }
+    ul { list-style: none; padding: 0; font-size: 1.1rem; }
+    li { margin: 10px 0; }
+    a { color: #fff; text-decoration: underline; cursor: pointer; }
+    a:hover { color: #8ab4f8; }
+  </style>
+</head>
+<body>
+  <h1>Index of /Users/</h1>
+  <ul>
+    <li><a onclick="checkUserAccess()">📁 User/</a></li>
+    <li><a href="./공용/">📁 공용/</a></li>
+  </ul>
+
+  <script>
+    function checkUserAccess() {
+      // answer(true)를 해야만 열림
+      const unlocked = localStorage.getItem('user_unlocked');
+      if (unlocked === 'true') {
+        window.location.href = "./User/";
+      } else {
+        alert("접근 권한이 없습니다.");
+      }
+    }
+  </script>
+</body>
+</html>
