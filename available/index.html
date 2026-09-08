@@ -36,7 +36,7 @@
     .th-date { width: 30%; text-align: right; }
     
     td {
-      padding: 4px 8px;
+      padding: 6px 8px;
     }
     td.size, td.date {
       text-align: right;
@@ -52,7 +52,7 @@
       color: #8ab4f8;
     }
 
-    /* 하단 커스텀 텍스트 뷰어 (alert 대신 사용) */
+    /* 하단 커스텀 텍스트 뷰어 */
     #viewer-box {
       display: none;
       position: fixed;
@@ -86,20 +86,6 @@
       cursor: pointer;
       color: #ff5555;
     }
-    
-    /* 드래그 이스터에그 */
-    .hidden-file {
-      color: #000000;
-      user-select: text;
-    }
-    .hidden-file a {
-      color: #000000;
-      text-decoration: none;
-    }
-    .hidden-file a::selection, .hidden-file::selection {
-      background: #ffffff;
-      color: #000000;
-    }
   </style>
 </head>
 <body>
@@ -115,95 +101,43 @@
       </tr>
     </thead>
     <tbody>
-      <!-- 폴더들 -->
+      <!-- 지정된 3개 폴더 -->
       <tr>
-        <td><a onclick="showContent('📁 $Recycle.Bin/', '시스템 폴더 접근이 거부되었습니다.')">📁 $Recycle.Bin/</a></td>
+        <td><a onclick="showContent('📁 Boot/', '부팅 구성 데이터가 손상되었습니다.')">📁 Boot/</a></td>
         <td class="size"></td>
-        <td class="date">26. 9. 8. 오전 9:28:20</td>
+        <td class="date">26. 9. 8. 오전 9:00:12</td>
       </tr>
       <tr>
-        <td><a onclick="showContent('📁 $WINDOWS.~BT/', '복구 폴더가 비어있습니다.')">📁 $WINDOWS.~BT/</a></td>
+        <td><a onclick="showContent('📁 Users/', '사용자 디렉토리에 접근할 수 없습니다.')">📁 Users/</a></td>
         <td class="size"></td>
-        <td class="date">26. 5. 8. 오후 12:29:33</td>
+        <td class="date">26. 9. 8. 오전 9:02:41</td>
       </tr>
       <tr>
-        <td><a onclick="showContent('📁 ChromeDevSession/', '접근 시스템 세션이 만료되었습니다.')">📁 ChromeDevSession/</a></td>
+        <td><a onclick="showContent('📁 Program Files/', '프로그램 실행 응답이 없습니다.')">📁 Program Files/</a></td>
         <td class="size"></td>
-        <td class="date">26. 5. 13. 오후 12:00:19</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('📁 Documents and Settings/', '권한 필요: Administrator')">📁 Documents and Settings/</a></td>
-        <td class="size"></td>
-        <td class="date">23. 10. 20. 오후 2:31:06</td>
-      </tr>
-      <tr>
-        <td><a onclick="goNotAvailable()">📁 Download/</a></td>
-        <td class="size"></td>
-        <td class="date">23. 11. 3. 오전 11:21:03</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('📁 Entry/', 'Entry 기록: [데이터 소실됨]')">📁 Entry/</a></td>
-        <td class="size"></td>
-        <td class="date">26. 3. 17. 오전 8:34:54</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('📁 Program Files/', '경고: 서브 루트 서버 연결 끊김')">📁 Program Files/</a></td>
-        <td class="size"></td>
-        <td class="date">26. 9. 8. 오전 9:04:00</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('📁 Recovery/', 'Recovery 영역 파괴됨')">📁 Recovery/</a></td>
-        <td class="size"></td>
-        <td class="date">26. 4. 1. 오전 11:24:13</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('📁 Users/', '유저 데이터 누출 위험이 감지되었습니다.')">📁 Users/</a></td>
-        <td class="size"></td>
-        <td class="date">26. 3. 23. 오후 12:25:54</td>
+        <td class="date">26. 9. 8. 오전 9:05:19</td>
       </tr>
 
-      <!-- 텍스트/데이터 파일들 -->
+      <!-- 지정된 4개 파일 -->
       <tr>
-        <td><a onclick="showContent('a.txt', '무언가 시작되고 있다.')">📄 a</a></td>
-        <td class="size">0 B</td>
-        <td class="date">26. 4. 6. 오전 8:47:06</td>
+        <td><a onclick="showContent('howtorun.txt', '실행하는 방법은.. RjEyIENvbnNvbGUsIGFuZCBydW4gInRyaWdnZXIocnVuKSI=')">📄 howtorun.txt</a></td>
+        <td class="size">1.1 kB</td>
+        <td class="date">26. 9. 8. 오전 9:10:00</td>
       </tr>
       <tr>
-        <td><a onclick="showContent('appverifUI.dll', '[BINARY FILE]\nDLL 파일은 직접 해석할 수 없습니다.')">📄 appverifUI.dll</a></td>
-        <td class="size">110 kB</td>
-        <td class="date">26. 1. 27. 오전 6:18:18</td>
+        <td><a onclick="showContent('recovery.dll', '[열 수 없는 것 같다.]')">📄 recovery.dll</a></td>
+        <td class="size">45.2 kB</td>
+        <td class="date">26. 9. 8. 오전 9:11:22</td>
       </tr>
       <tr>
-        <td><a onclick="showContent('DumpStack.log', 'CRASH_LOG: SYSTEM UNEXPECTED SHUTDOWN AT 0x000000F')">📄 DumpStack.log</a></td>
-        <td class="size">12.0 kB</td>
-        <td class="date">26. 6. 25. 오전 8:42:32</td>
+        <td><a onclick="showContent('really.bat', '오류 : code.dll를 찾을 수 없습니다.')">📄 really.bat</a></td>
+        <td class="size">320 B</td>
+        <td class="date">26. 9. 8. 오전 9:12:05</td>
       </tr>
       <tr>
-        <td><a onclick="showContent('howtorun.txt', '[ 실행 방법 ]\n1. 절대로 뒤를 돌아보지 마라.\n2. URL 뒤에 /secret 을 입력하거나 숨겨진 key를 찾아라.\n3. N-O-T는 재앙의 시작이었다.')">📄 howtorun.txt</a></td>
-        <td class="size">1.2 kB</td>
-        <td class="date">26. 9. 8. 오전 9:30:11</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('README_FIRST.txt', '이 시스템은 이미 제어권을 잃었습니다. 즉시 이 페이지를 나가십시오.')">📄 README_FIRST.txt</a></td>
-        <td class="size">482 B</td>
-        <td class="date">26. 9. 8. 오전 9:31:00</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('passcodes.dat', '0x8849 [ENCRYPTED]\n0x9921 [ENCRYPTED]')">📄 passcodes.dat</a></td>
-        <td class="size">2.4 kB</td>
-        <td class="date">26. 8. 15. 오후 4:12:09</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('MyCert.pfx', '보안 인증서가 만료되었습니다.')">📄 MyCert.pfx</a></td>
-        <td class="size">2.6 kB</td>
-        <td class="date">26. 4. 8. 오전 11:15:06</td>
-      </tr>
-
-      <!-- 숨겨진 검은 파일 (드래그해야만 보임) -->
-      <tr class="hidden-file">
-        <td><a onclick="showContent('do_not_delete.sys', '비밀 문서를 발견했습니다! /secret 경로로 이동하세요.')">📄 do_not_delete.sys</a></td>
-        <td class="size" style="color:#000000;">666 B</td>
-        <td class="date" style="color:#000000;">00. 0. 0. 00:00:00</td>
+        <td><a onclick="showContent('readme_first.txt', '이 글.을 읽는 누누?군가1가.. 복구하 면-흗!.= 좋.. 겠2 ? ㅈ. !0ㅋ 삊 지?  ')">📄 readme_first.txt</a></td>
+        <td class="size">850 B</td>
+        <td class="date">26. 9. 8. 오전 9:15:30</td>
       </tr>
     </tbody>
   </table>
@@ -228,8 +162,14 @@
       document.getElementById('viewer-box').style.display = 'none';
     }
 
-    function goNotAvailable() {
-      window.location.href = "../NotAvailable/";
+    // Base64 힌트(F12 Console, and run "trigger(run)")를 직접 실행할 사람을 위한 F12 이스터에그
+    function trigger(param) {
+      if(param === 'run') {
+        console.log("%c[SYSTEM OVERRIDE SUCCESS]", "color: #00ff66; font-size: 16px;");
+        alert("시스템 트리거 발동: 다음 비밀 주소는 /secret 입니다.");
+      } else {
+        console.log("사용법: trigger(run) 코드를 입력하세요.");
+      }
     }
   </script>
 </body>
