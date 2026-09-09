@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>C:\Users의 색인</title>
+  <title>C:\Users\User의 색인</title>
   <style>
     body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 20px 40px; }
     h1 { font-size: 2rem; }
@@ -13,21 +13,30 @@
   </style>
 </head>
 <body>
-  <h1>Index of /Users/</h1>
-  <ul>
-    <li><a onclick="checkUserAccess()">📁 User/</a></li>
-    <li><a href="./Public/">📁 Public/</a></li>
-  </ul>
+
+  <!-- 권한이 확인되면 나타날 기본 화면 -->
+  <div id="content" style="display: none;">
+    <h1>Index of /Users/User/</h1>
+    <ul>
+      <li><a href="./Desktop/">📁 Desktop/</a></li>
+      <li><a href="./Download/">📁 Download/</a></li>
+    </ul>
+  </div>
 
   <script>
-    function checkUserAccess() {
-      const unlocked = localStorage.getItem('user_unlocked');
-      if (unlocked === 'true') {
-        window.location.href = "./User/";
+    // 페이지 로드되자마자 answer(true)를 했는지 검증!
+    (function() {
+      var isUnlocked = localStorage.getItem('user_unlocked');
+      
+      if (isUnlocked === 'true') {
+        // 권한 승인됨: 화면 보여주기
+        document.getElementById('content').style.display = 'block';
       } else {
-        alert("접근 권한이 없습니다.");
+        // 권한 없음: 경고창 띄우고 Users 폴더로 튕겨내기
+        alert("접근 권한이 없습니다. C:\\ 에서 인증을 완료하십시오.");
+        window.location.href = "../";
       }
-    }
+    })();
   </script>
 </body>
 </html>
