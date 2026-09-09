@@ -35,5 +35,32 @@
   <div class="main-text">Not Available</div>
   <div class="hidden-text">really</div>
 
+  <script>
+  let secretBuffer = "";
+
+  // 화면 전체에서 키보드 입력 감지
+  window.addEventListener('keydown', function(e) {
+    // 입력한 키를 소문자로 변환해서 버퍼에 누적
+    secretBuffer += e.key.toLowerCase();
+
+    // 입력 기록이 너무 길어지지 않게 최근 10자만 유지
+    if (secretBuffer.length > 10) {
+      secretBuffer = secretBuffer.slice(-10);
+    }
+
+    // "nothing" 이 연속으로 입력되었는지 체크
+    if (secretBuffer.endsWith('nothing')) {
+      // 콘솔에 노란색 글씨로 메시지 출력
+      console.log("%cNothing has unchanged...?", "color: #e5c07b; font-weight: bold; font-size: 14px;");
+
+      // 쿠키 및 로컬스토리지에 저장 (Download 폴더에서 RealFile.txt 해금용)
+      localStorage.setItem('nothing_found', 'true');
+      document.cookie = "nothing_found=true; path=/;";
+
+      // 버퍼 초기화 (중복 실행 방지)
+      secretBuffer = "";
+    }
+  });
+</script>
 </body>
 </html>
