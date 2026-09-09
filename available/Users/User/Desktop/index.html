@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>C:\Users\User\Desktop의 색인</title>
+  <style>
+    body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 20px 40px; }
+    h1 { font-size: 2rem; }
+    ul { list-style: none; padding: 0; font-size: 1.05rem; }
+    li { margin: 12px 0; }
+    a { color: #fff; text-decoration: underline; cursor: pointer; }
+    a:hover { color: #8ab4f8; }
+
+    #viewer-box {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 880px;
+      background-color: #111;
+      border: 1px solid #fff;
+      padding: 15px 20px;
+    }
+    #viewer-title { font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 5px; margin-bottom: 10px; color: #8ab4f8; display: flex; justify-content: space-between; }
+    #viewer-content { font-family: monospace; white-space: pre-wrap; font-size: 0.9rem; line-height: 1.4; }
+    .close-btn { cursor: pointer; color: #ff5555; }
+  </style>
+</head>
+<body>
+
+  <div id="content" style="display: none;">
+    <h1>Index of /Users/User/Desktop/</h1>
+    <ul>
+      <li><a onclick="showContent('note.txt', '이 시스템에 들어온 이상 너도 안전하지 않다.\n서버실의 데이터는 이미 백업되었다.')">📄 note.txt</a></li>
+      <li><a onclick="showContent('todo_list.txt', '[할 일 목록]\n1. 서버 백업 확인하기\n2. C:\\ 분기점 코드 삭제하기 (실패)\n3. Downloads 폴더 정방향 압축 해제하기')">📄 todo_list.txt</a></li>
+      <li><a onclick="showContent('???.sys', '0x00019A8F_CRITICAL_CORRUPTION_DETECTED')">📄 ???.sys</a></li>
+    </ul>
+
+    <div id="viewer-box">
+      <div id="viewer-title">
+        <span id="file-title">FILE</span>
+        <span class="close-btn" onclick="closeViewer()">[X] CLOSE</span>
+      </div>
+      <div id="viewer-content"></div>
+    </div>
+  </div>
+
+  <script>
+    // 보안 검증 (직접 접근 차단)
+    (function() {
+      if (localStorage.getItem('user_unlocked') === 'true') {
+        document.getElementById('content').style.display = 'block';
+      } else {
+        alert("접근 권한이 없습니다.");
+        window.location.href = "../../";
+      }
+    })();
+
+    function showContent(title, text) {
+      document.getElementById('file-title').innerText = title;
+      document.getElementById('viewer-content').innerText = text;
+      document.getElementById('viewer-box').style.display = 'block';
+    }
+    function closeViewer() {
+      document.getElementById('viewer-box').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
