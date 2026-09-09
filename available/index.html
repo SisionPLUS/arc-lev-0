@@ -6,136 +6,35 @@
   <meta name="robots" content="noindex, nofollow">
   <title>C:\의 색인</title>
   <style>
-    body {
-      background-color: #000000;
-      color: #ffffff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 20px 40px;
-      user-select: none;
-    }
-    h1 {
-      font-size: 2rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      color: #ffffff;
-    }
-    table {
-      width: 100%;
-      max-width: 900px;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-    }
-    th {
-      font-weight: 600;
-      padding: 8px;
-      text-align: left;
-      color: #ffffff;
-    }
-    .th-name { width: 55%; }
-    .th-size { width: 15%; text-align: right; }
-    .th-date { width: 30%; text-align: right; }
-    
-    td {
-      padding: 6px 8px;
-    }
-    td.size, td.date {
-      text-align: right;
-      color: #aaaaaa;
-    }
-    
-    a {
-      color: #ffffff;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    a:hover {
-      color: #8ab4f8;
-    }
-
-    #viewer-box {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 880px;
-      background-color: #111111;
-      border: 1px solid #ffffff;
-      padding: 15px 20px;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-    }
-    #viewer-title {
-      font-weight: bold;
-      border-bottom: 1px solid #444;
-      padding-bottom: 5px;
-      margin-bottom: 10px;
-      color: #8ab4f8;
-      display: flex;
-      justify-content: space-between;
-    }
-    #viewer-content {
-      font-family: monospace;
-      white-space: pre-wrap;
-      color: #ffffff;
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-    .close-btn {
-      cursor: pointer;
-      color: #ff5555;
-    }
+    body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 20px 40px; user-select: none; }
+    h1 { font-size: 2rem; font-weight: 600; margin-bottom: 20px; }
+    table { width: 100%; max-width: 900px; border-collapse: collapse; font-size: 0.95rem; }
+    th { font-weight: 600; padding: 8px; text-align: left; color: #fff; }
+    .th-name { width: 55%; } .th-size { width: 15%; text-align: right; } .th-date { width: 30%; text-align: right; }
+    td { padding: 6px 8px; } td.size, td.date { text-align: right; color: #aaa; }
+    a { color: #fff; text-decoration: underline; cursor: pointer; } a:hover { color: #8ab4f8; }
+    #viewer-box { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 880px; background-color: #111; border: 1px solid #fff; padding: 15px 20px; box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
+    #viewer-title { font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 5px; margin-bottom: 10px; color: #8ab4f8; display: flex; justify-content: space-between; }
+    #viewer-content { font-family: monospace; white-space: pre-wrap; color: #fff; font-size: 0.9rem; line-height: 1.4; }
+    .close-btn { cursor: pointer; color: #ff5555; }
   </style>
 </head>
 <body>
-
   <h1>C:\의 색인</h1>
 
   <table>
     <thead>
-      <tr>
-        <th class="th-name">이름</th>
-        <th class="th-size">크기</th>
-        <th class="th-date">수정된 날짜</th>
-      </tr>
+      <tr><th class="th-name">이름</th><th class="th-size">크기</th><th class="th-date">수정된 날짜</th></tr>
     </thead>
     <tbody>
-      <tr>
-        <td><a href="./Boot/">📁 Boot/</a></td>
-        <td class="size"></td>
-        <td class="date">26. 9. 8. 오전 9:00:12</td>
-      </tr>
-      <tr>
-        <td><a href="./Users/">📁 Users/</a></td>
-        <td class="size"></td>
-        <td class="date">26. 9. 8. 오전 9:02:41</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('📁 Program Files/', '프로그램 실행 응답이 없습니다.')">📁 Program Files/</a></td>
-        <td class="size"></td>
-        <td class="date">26. 9. 8. 오전 9:05:19</td>
-      </tr>
-
-      <tr>
-        <td><a onclick="showContent('howtorun.txt', '실행하는 방법은.. RjEyIENvbnNvbGUsIGFuZCBydW4gInRyaWdnZXIocnVuKSI=')">📄 howtorun.txt</a></td>
-        <td class="size">1.1 kB</td>
-        <td class="date">26. 9. 8. 오전 9:10:00</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('recovery.dll', '[열 수 없는 것 같다.]')">📄 recovery.dll</a></td>
-        <td class="size">45.2 kB</td>
-        <td class="date">26. 9. 8. 오전 9:11:22</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('really.bat', '오류 : code.dll를 찾을 수 없습니다.')">📄 really.bat</a></td>
-        <td class="size">320 B</td>
-        <td class="date">26. 9. 8. 오전 9:12:05</td>
-      </tr>
-      <tr>
-        <td><a onclick="showContent('readme_first.txt', '이 글.을 읽는 누누?군가1가.. 복구하 면-흗!.= 좋.. 겠2 ? ㅈ. !0ㅋ 삊 지?  ')">📄 readme_first.txt</a></td>
-        <td class="size">850 B</td>
-        <td class="date">26. 9. 8. 오전 9:15:30</td>
-      </tr>
+      <tr><td><a href="./Boot/">📁 Boot/</a></td><td class="size"></td><td class="date">26. 9. 8. 오전 9:00:12</td></tr>
+      <tr><td><a href="./Users/">📁 Users/</a></td><td class="size"></td><td class="date">26. 9. 8. 오전 9:02:41</td></tr>
+      <tr><td><a onclick="openProgramFiles()">📁 Program Files/</a></td><td class="size"></td><td class="date">26. 9. 8. 오전 9:05:19</td></tr>
+      <tr><td><a onclick="showContent('HowToAnswer.txt', '답은 항상 C:\\(여기)에서 쓰기를..')">📄 HowToAnswer.txt</a></td><td class="size">420 B</td><td class="date">26. 9. 8. 오전 9:08:15</td></tr>
+      <tr><td><a onclick="showContent('howtorun.txt', '실행하는 방법은.. RjEyIENvbnNvbGUsIGFuZCBydW4gInRyaWdnZXIocnVuKSI=')">📄 howtorun.txt</a></td><td class="size">1.1 kB</td><td class="date">26. 9. 8. 오전 9:10:00</td></tr>
+      <tr><td><a onclick="showContent('recovery.dll', '[열 수 없는 것 같다.]')">📄 recovery.dll</a></td><td class="size">45.2 kB</td><td class="date">26. 9. 8. 오전 9:11:22</td></tr>
+      <tr><td><a onclick="showContent('really.bat', '오류 : code.dll를 찾을 수 없습니다.')">📄 really.bat</a></td><td class="size">320 B</td><td class="date">26. 9. 8. 오전 9:12:05</td></tr>
+      <tr><td><a onclick="showContent('readme_first.txt', '이 글.을 읽는 누누?군가1가.. 복구하 면-흗!.= 좋.. 겠2 ? ㅈ. !0ㅋ 삊 지?  ')">📄 readme_first.txt</a></td><td class="size">850 B</td><td class="date">26. 9. 8. 오전 9:15:30</td></tr>
     </tbody>
   </table>
 
@@ -147,61 +46,80 @@
     <div id="viewer-content"></div>
   </div>
 
-<script>
-  // 굳이 치트까지 사용해서 풀려는 모습을 보니, 참 너무하네요.
-  // 두뇌로 풀어보는건 어때요?
-  // 이렇게 해독하는것보단 직접 풀어야 더 재밌지 않겠어요?
-  // 흠.. 그래도 여기까지 왔으니, 선물이라도 드릴게요.
-  // trigger("run")
-  // 더이상은 못알려줘요. 굳이 보려는것부터 잘못 된거지만.
+  <script>
+    // 굳이 치트까지 사용해서 풀려는 모습을 보니, 참 너무하네요.
+    // 두뇌로 풀어보는건 어때요?
+    // 이렇게 해독하는것보단 직접 풀어야 더 재밌지 않겠어요?
+    // 흠.. 그래도 여기까지 왔으니, 선물이라도 드릴게요.
+    // trigger("run")
+    // 더이상은 못알려줘요. 굳이 보려는것부터 잘못 된거지만.
 
-  function showContent(t, e) {
-    document.getElementById('file-title').innerText = t;
-    document.getElementById('viewer-content').innerText = e;
-    document.getElementById('viewer-box').style.display = 'block';
-  }
+    let currentOpenFile = "";
+    let typedBuffer = "";
 
-  function closeViewer() {
-    document.getElementById('viewer-box').style.display = 'none';
-  }
-
-  // 1단계: trigger("run") 승인
-  window.trigger = function() {
-    var param = arguments[0];
-    if (typeof param !== 'string') {
-      console.log("%c[오류] 문법오류 : trigger값 뒤 괄호에는 string이 와야합니다.", "color: #ff5555; font-weight: bold;");
-      return;
-    }
-    if (param === 'run') {
-      localStorage.setItem('override_granted', 'true');
-      console.log("%c[SUCCESS] System override granted.", "color: #00ff66;");
-    }
-  };
-
-  // 2단계: answer(true) 승인
-  window.answer = function() {
-    var isOverride = localStorage.getItem('override_granted');
-    if (isOverride !== 'true') {
-      console.log("%c[ERR] Override authorization required.", "color: #ff5555;");
-      return;
+    function showContent(title, text) {
+      currentOpenFile = title;
+      typedBuffer = "";
+      document.getElementById('file-title').innerText = title;
+      document.getElementById('viewer-content').innerText = text;
+      document.getElementById('viewer-box').style.display = 'block';
     }
 
-    var val = arguments[0];
-    if (typeof val !== 'boolean') {
-      console.log("%c[ERR] Invalid argument type.", "color: #ff5555;");
-      return;
+    function closeViewer() {
+      currentOpenFile = "";
+      document.getElementById('viewer-box').style.display = 'none';
     }
 
-    if (val === true) {
-      localStorage.setItem('user_unlocked', 'true');
-      console.log("%c[SUCCESS] Something directory access granted.", "color: #00ff66; font-weight: bold;");
-    } else {
-      localStorage.setItem('user_unlocked', 'false');
-      console.log("%c[INFO] Access locked.", "color: #ffaa00;");
+    // really.bat 열고 "battle" 키보드로 타자칠 때 Program Files 잠금 해제
+    window.addEventListener('keydown', function(e) {
+      if (currentOpenFile === 'really.bat') {
+        typedBuffer += e.key.toLowerCase();
+        if (typedBuffer.endsWith('battle')) {
+          localStorage.setItem('pf_unlocked', 'true');
+          alert("[SYSTEM] Program Files 디렉터리의 잠금이 해제되었습니다.");
+          document.getElementById('viewer-content').innerText = "오류 해결됨 : code.dll 인스턴스 활성화 완료.\nProgram Files 접근 승인됨.";
+        }
+      }
+    });
+
+    function openProgramFiles() {
+      if (localStorage.getItem('pf_unlocked') === 'true') {
+        window.location.href = "./Program Files/";
+      } else {
+        showContent('📁 Program Files/', '프로그램 실행 응답이 없습니다.');
+      }
     }
-  };
-</script>
-</script>
+
+    window.trigger = function() {
+      var param = arguments[0];
+      if (typeof param !== 'string') {
+        console.log("%c[오류] 문법오류 : trigger값 뒤 괄호에는 string이 와야합니다.", "color: #ff5555; font-weight: bold;");
+        return;
+      }
+      if (param === 'run') {
+        localStorage.setItem('override_granted', 'true');
+        console.log("%c[SUCCESS] System override granted.", "color: #00ff66;");
+      }
+    };
+
+    window.answer = function() {
+      if (localStorage.getItem('override_granted') !== 'true') {
+        console.log("%c[ERR] Override authorization required.", "color: #ff5555;");
+        return;
+      }
+      var val = arguments[0];
+      if (typeof val !== 'boolean') {
+        console.log("%c[ERR] Invalid argument type.", "color: #ff5555;");
+        return;
+      }
+      if (val === true) {
+        localStorage.setItem('user_unlocked', 'true');
+        console.log("%c[SUCCESS] Something directory access granted.", "color: #00ff66; font-weight: bold;");
+      } else {
+        localStorage.setItem('user_unlocked', 'false');
+        console.log("%c[INFO] Access locked.", "color: #ffaa00;");
+      }
+    };
   </script>
 </body>
 </html>
