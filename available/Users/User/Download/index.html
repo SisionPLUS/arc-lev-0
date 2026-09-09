@@ -10,32 +10,18 @@
     li { margin: 12px 0; }
     a { color: #fff; text-decoration: underline; cursor: pointer; }
     a:hover { color: #8ab4f8; }
-
-    #viewer-box {
-      display: none;
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 880px;
-      background-color: #111;
-      border: 1px solid #fff;
-      padding: 15px 20px;
-    }
+    #viewer-box { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 880px; background-color: #111; border: 1px solid #fff; padding: 15px 20px; }
     #viewer-title { font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 5px; margin-bottom: 10px; color: #8ab4f8; display: flex; justify-content: space-between; }
     #viewer-content { font-family: monospace; white-space: pre-wrap; font-size: 0.9rem; line-height: 1.4; }
     .close-btn { cursor: pointer; color: #ff5555; }
   </style>
 </head>
 <body>
-
   <div id="content" style="display: none;">
     <h1>Index of /Users/User/Download/</h1>
-    <ul>
+    <ul id="file-list">
+      <li><a onclick="showContent('recovery.txt', '진짜 불가능할때, 아무것도 아니야라고 쳤을때 열려?')">📄 recovery.txt</a></li>
       <li><a onclick="showContent('Patch_v1.02.exe', '[실행 불가능]\n이 파일은 손상되었거나 호환되지 않는 아키텍처입니다.')">📄 Patch_v1.02.exe</a></li>
-      <li><a onclick="showContent('secret_archive.zip', '압축 파일 내용물:\n- key_fragment.dat (암호 필요)\n- next_target.url (손상됨)')">📄 secret_archive.zip</a></li>
-      <li><a onclick="showContent('memo.log', '2026-09-08 23:11:00 - 외부 IP에서 접근 시도 감지됨.\n포트: 8080')">📄 memo.log</a></li>
     </ul>
 
     <div id="viewer-box">
@@ -48,10 +34,23 @@
   </div>
 
   <script>
-    // 보안 검증 (직접 접근 차단)
     (function() {
       if (localStorage.getItem('user_unlocked') === 'true') {
         document.getElementById('content').style.display = 'block';
+
+        // nothing 기믹을 완료하고 온 상태 체크
+        if (localStorage.getItem('nothing_found') === 'true') {
+          const list = document.getElementById('file-list');
+          const realFileLi = document.createElement('li');
+
+          // 세로 앞글자: RUNBATANDWRITEBATTLE
+          const textContent = `[source: 1]Running\nUgly\nNot\nBattle\nAre\nTruth\nApple\nNeed\nDo\nWar\nRight\nIce\nTell\nEnd\nBig\nAll\nTelevision\nTurtle\nLemon\nEar`;
+          const blob = new Blob([textContent], { type: 'text/plain' });
+          const url = URL.createObjectURL(blob);
+
+          realFileLi.innerHTML = `<a href="${url}" download="RealFile.txt" style="color: #61afef; font-weight: bold;">💾 RealFile.txt (다운로드)</a>`;
+          list.appendChild(realFileLi);
+        }
       } else {
         alert("접근 권한이 없습니다.");
         window.location.href = "../../";
