@@ -20,17 +20,18 @@
   </style>
 </head>
 <body>
-  <h1>C:\의 색인</h1>
+
+  <!-- 상단 제목 & [종료] 버튼 (table 밖으로 올바르게 위치!) -->
+  <div style="display: flex; justify-content: space-between; align-items: center; max-width: 900px; margin-bottom: 20px;">
+    <h1 style="margin: 0;">C:\의 색인</h1>
+    <a href="https://arc-lev-0.kro.kr/" style="color: #ff5555; text-decoration: none; font-weight: bold; border: 1px solid #ff5555; padding: 5px 10px;">[종료]</a>
+  </div>
 
   <table>
     <thead>
       <tr><th class="th-name">이름</th><th class="th-size">크기</th><th class="th-date">수정된 날짜</th></tr>
     </thead>
     <tbody>
-      <div style="display: flex; justify-content: space-between; align-items: center; max-width: 900px; margin-bottom: 20px;">
-        <h1 style="margin: 0;">C:\의 색인</h1>
-        <a href="https://arc-lev-0.kro.kr/" style="color: #ff5555; text-decoration: none; font-weight: bold; border: 1px solid #ff5555; padding: 5px 10px;">[종료]</a>
-      </div>
       <tr><td><a href="./Boot/">📁 Boot/</a></td><td class="size"></td><td class="date">26. 9. 8. 오전 9:00:12</td></tr>
       <tr><td><a href="./Users/">📁 Users/</a></td><td class="size"></td><td class="date">26. 9. 8. 오전 9:02:41</td></tr>
       <tr><td><a onclick="openProgramFiles()">📁 Program Files/</a></td><td class="size"></td><td class="date">26. 9. 8. 오전 9:05:19</td></tr>
