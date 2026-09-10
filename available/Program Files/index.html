@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>C:\Program Files의 색인</title>
+  <style>
+    body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 20px 40px; }
+    h1 { font-size: 2rem; }
+    ul { list-style: none; padding: 0; font-size: 1.05rem; }
+    li { margin: 12px 0; }
+    a { color: #fff; text-decoration: underline; cursor: pointer; }
+    a:hover { color: #8ab4f8; }
+
+    /* Modal / Viewer Box */
+    #viewer-box {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 880px;
+      background-color: #111;
+      border: 1px solid #fff;
+      padding: 15px 20px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+    #viewer-title { font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 5px; margin-bottom: 10px; color: #8ab4f8; display: flex; justify-content: space-between; }
+    #viewer-content { font-family: monospace; white-space: pre-wrap; font-size: 0.9rem; line-height: 1.4; max-height: 300px; overflow-y: auto; }
+    .close-btn { cursor: pointer; color: #ff5555; }
+    .progress-bar { width: 100%; background-color: #222; border: 1px solid #444; margin: 10px 0; height: 15px; position: relative; }
+    .progress-fill { width: 0%; height: 100%; background-color: #61afef; transition: width 0.2s; }
+  </style>
+</head>
+<body>
+
+  <div id="content" style="display: none;">
+    <h1>Index of /Program Files/</h1>
+    <ul>
+      <li><a href="./Logs/">📁 Logs/</a></li>
+      <li><a onclick="runAnalyzer()">⚙️ System_Analyzer.exe</a></li>
+    </ul>
+
+    <div id="viewer-box">
+      <div id="viewer-title">
+        <span id="file-title">System_Analyzer.exe</span>
+        <span class="close-btn" onclick="closeViewer()">[X] CLOSE</span>
+      </div>
+      <div id="viewer-content"></div>
+    </div>
+  </div>
+
+  <script>
+    // pf_unlocked 권한 검증 (really.bat에서 battle 미입력 시 접근 차단)
+    (function() {
+      if (localStorage.getItem('pf_unlocked') === 'true') {
+        document.getElementById('content').style.display = 'block';
+      } else {
+        alert("접근 권한이 없습니다. C:\\에서 필수 종속성을 활성화하십시오.");
+        window.location.href = "../";
+      }
+    })();
+
+    const scanLogs = [
+      "[01/15] [INFO] Initializing System_Analyzer v3.02...",
+      "[02/15] [INFO] Target directory set: C:\\Program Files\\",
+      "[03/15] [SUCCESS] Active session token verified: [PF_UNLOCKED=TRUE]",
+      "[04/15] [INFO] Scanning loaded DLL instances in RAM...",
+      "[05/15] [SUCCESS] code.dll dependency injected successfully.",
+      "[06/15] [INFO] Reading sector permissions for /Boot/ partition...",
+      "[07/15] [WARN] Integrity check failed at 0x00019A8F.",
+      "[08/15] [INFO] Parsing local storage flag: 'nothing_found'... DETECTED",
+      "[09/15] [INFO] Inspecting user registry keys under HKCU\\Software\\System...",
+      "[10/15] [WARN] Security breach detected from previous session. Override attempt logged.",
+      "[11/15] [INFO] Cross-checking cryptographic hash with C:\\really.bat... MATCHED",
+      "[12/15] [WARN] Secondary override password for C:\\Boot\\ missing from buffer.",
+      "[13/15] [ERROR] C:\\Boot\\ Access Denied: Requires 2nd-stage security pass.",
+      "[14/15] [INFO] Indexing background threads... 14 process(es) monitored.",
+      "[15/15] [INFO] Scan complete. Outputting diagnostic summary to viewer..."
+    ];
+
+    let isScanning = false;
+
+    function runAnalyzer() {
+      if (isScanning) return;
+      isScanning = true;
+
+      const viewer = document.getElementById('viewer-box');
+      const content = document.getElementById('viewer-content');
+      document.getElementById('file-title').innerText = "System_Analyzer.exe - Executing...";
+      viewer.style.display = 'block';
+
+      content.innerHTML = `<div>SYSTEM SCAN IN PROGRESS...</div>
+                           <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+                           <div id="log-zone" style="color: #aaa; font-size: 0.85rem;"></div>`;
+
+      const fill = document.getElementById('fill');
+      const logZone = document.getElementById('log-zone');
+      let step = 0;
+
+      // 15개 로그 연출하며 스캔 진행
+      const interval = setInterval(() => {
+        if (step < scanLogs.length) {
+          fill.style.width = Math.floor(((step + 1) / scanLogs.length) * 100) + '%';
+          logZone.innerHTML += scanLogs[step] + '<br>';
+          logZone.scrollTop = logZone.scrollHeight;
+          console.log("%c" + scanLogs[step], "color: #e5c07b;");
+          step++;
+        } else {
+          clearInterval(interval);
+          
+          // 스캔 완료 1차 결과 출력
+          setTimeout(() => {
+            content.innerHTML = `<span style="color: #ff5555; font-weight: bold;">경고: C:\\Boot\\ 접근을 위한 2차 오버라이드 암호 키가 분실됨.</span>\n\n`;
+            
+            // 안 나가고 조금 기다리면 추가 출력되는 딜레이 연출!
+            setTimeout(() => {
+              content.innerHTML += `<span style="color: #8ab4f8; font-style: italic;">'부팅... 폴더... 해답... 시계... 데이터... 찾기...'</span>`;
+              isScanning = false;
+            }, 3500);
+
+          }, 600);
+        }
+      }, 250);
+    }
+
+    function closeViewer() {
+      if (isScanning) return;
+      document.getElementById('viewer-box').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
