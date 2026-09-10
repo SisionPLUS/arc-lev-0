@@ -11,7 +11,6 @@
     a { color: #fff; text-decoration: underline; cursor: pointer; }
     a:hover { color: #8ab4f8; }
 
-    /* Modal / Viewer Box */
     #viewer-box {
       display: none;
       position: fixed;
@@ -20,15 +19,16 @@
       transform: translateX(-50%);
       width: 90%;
       max-width: 880px;
+      height: 380px;
       background-color: #111;
       border: 1px solid #fff;
       padding: 15px 20px;
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
     }
     #viewer-title { font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 5px; margin-bottom: 10px; color: #8ab4f8; display: flex; justify-content: space-between; }
-    #viewer-content { font-family: monospace; white-space: pre-wrap; font-size: 0.9rem; line-height: 1.4; max-height: 300px; overflow-y: auto; }
+    #viewer-content { font-family: monospace; white-space: pre-wrap; font-size: 0.85rem; line-height: 1.2; height: 310px; overflow: hidden; position: relative; }
     .close-btn { cursor: pointer; color: #ff5555; }
-    .progress-bar { width: 100%; background-color: #222; border: 1px solid #444; margin: 10px 0; height: 15px; position: relative; }
+    .progress-bar { width: 100%; background-color: #222; border: 1px solid #444; margin: 10px 0; height: 15px; }
     .progress-fill { width: 0%; height: 100%; background-color: #61afef; transition: width 0.2s; }
   </style>
 </head>
@@ -39,11 +39,14 @@
     <ul>
       <li><a href="./Logs/">📁 Logs/</a></li>
       <li><a onclick="runAnalyzer()">⚙️ System_Analyzer.exe</a></li>
+      <li><a onclick="runClock()">⏰ Clock.exe</a></li>
+      <li><a onclick="showError('Calc.exe', '오류 : explorer.exe를 실행할 수 없습니다.')">🧮 Calc.exe</a></li>
+      <li><a onclick="showError('Cmd.exe', '시스템이 Application에 대한 메시지 파일에서 메시지 번호 0x2350에 대한 메시지 텍스트를 찾지 못했습니다.')">💻 Cmd.exe</a></li>
     </ul>
 
     <div id="viewer-box">
       <div id="viewer-title">
-        <span id="file-title">System_Analyzer.exe</span>
+        <span id="file-title">FILE</span>
         <span class="close-btn" onclick="closeViewer()">[X] CLOSE</span>
       </div>
       <div id="viewer-content"></div>
@@ -51,7 +54,6 @@
   </div>
 
   <script>
-    // pf_unlocked 권한 검증 (really.bat에서 battle 미입력 시 접근 차단)
     (function() {
       if (localStorage.getItem('pf_unlocked') === 'true') {
         document.getElementById('content').style.display = 'block';
@@ -61,6 +63,150 @@
       }
     })();
 
+    let currentApp = "";
+    let clockInterval = null;
+    let clockClickCount = 0;
+    let isGlitching = false;
+
+    function showError(title, msg) {
+      currentApp = title;
+      if (clockInterval) clearInterval(clockInterval);
+      document.getElementById('file-title').innerText = title;
+      document.getElementById('viewer-content').innerHTML = `<div style="padding: 20px;">${msg}</div>`;
+      document.getElementById('viewer-box').style.display = 'block';
+    }
+
+    function closeViewer() {
+      currentApp = "";
+      if (clockInterval) clearInterval(clockInterval);
+      document.getElementById('viewer-box').style.display = 'none';
+    }
+
+    // --- Clock.exe 디지털 아스키 글리프 ---
+    const digits = {
+      '0': [" ### ", "#   #", "#   #", "#   #", " ### "],
+      '1': ["  #  ", " ##  ", "  #  ", "  #  ", " ### "],
+      '2': [" ### ", "#   #", "  ## ", " #   ", "#####"],
+      '3': ["#####", "   # ", " ### ", "   # ", "#####"],
+      '4': ["#   #", "#   #", "#####", "    #", "    #"],
+      '5': ["#####", "#    ", "#### ", "    #", "#####"],
+      '6': [" ### ", "#    ", "#### ", "#   #", " ### "],
+      '7': ["#####", "   # ", "  #  ", " #   ", " #   "],
+      '8': [" ### ", "#   #", " ### ", "#   #", " ### "],
+      '9': [" ### ", "#   #", " ####", "    #", " ### "],
+      ':': ["     ", "  #  ", "     ", "  #  ", "     "]
+    };
+
+    function runClock() {
+      currentApp = "Clock.exe";
+      clockClickCount = 0;
+      isGlitching = false;
+      
+      document.getElementById('file-title').innerText = "Clock.exe";
+      const content = document.getElementById('viewer-content');
+      document.getElementById('viewer-box').style.display = 'block';
+
+      if (clockInterval) clearInterval(clockInterval);
+
+      content.onclick = function() {
+        if (isGlitching) return;
+        clockClickCount++;
+
+        // 4번째 클릭: 10회 랜덤 글리치 후 소스코드 노출
+        if (clockClickCount === 4) {
+          isGlitching = true;
+          clearInterval(clockInterval);
+          
+          let glitchStep = 0;
+          const glitchChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+          const glitchInterval = setInterval(() => {
+            let randomText = "";
+            for (let i = 0; i < 8; i++) {
+              let line = "";
+              for (let j = 0; j < 35; j++) {
+                line += glitchChars.charAt(Math.floor(Math.random() * glitchChars.length));
+              }
+              randomText += line + "\n";
+            }
+            
+            content.innerHTML = `<div style="padding: 20px; color: #ff5555; font-family: monospace;">${randomText}</div>`;
+            glitchStep++;
+
+            if (glitchStep >= 10) {
+              clearInterval(glitchInterval);
+              showClockSourceCode();
+            }
+          }, 100);
+        }
+      };
+
+      clockInterval = setInterval(() => {
+        if (currentApp !== "Clock.exe" || isGlitching) return;
+
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        const ss = String(now.getSeconds()).padStart(2, '0');
+        const timeStr = `${hh}:${mm}:${ss}`;
+
+        let artLines = ["", "", "", "", ""];
+        for (let char of timeStr) {
+          const glyph = digits[char] || digits[':'];
+          for (let i = 0; i < 5; i++) {
+            artLines[i] += glyph[i] + "  ";
+          }
+        }
+
+        const activeColor = (clockClickCount >= 3) ? "#ff5555" : "#61afef";
+
+        let displayHTML = `<div style="padding-top: 20px; padding-left: 20px; color: ${activeColor}; font-family: monospace; cursor: pointer; user-select: none;">`;
+        for (let line of artLines) {
+          displayHTML += line + "\n";
+        }
+        displayHTML += `\n  2026년 09월 10일 Thursday\n\n  <span style="font-size: 0.75rem; color: #666;">[System Core Active - Click to Inspect]</span></div>`;
+
+        content.innerHTML = displayHTML;
+      }, 200);
+    }
+
+    function showClockSourceCode() {
+      const content = document.getElementById('viewer-content');
+      content.onclick = null;
+
+      const rawCode = `/* CRITICAL SYSTEM CORE: CLOCK_SERVICE_v2.SYS */
+function sys_render_clock(tick) {
+  const _0x4a1 = [0x14, 0x22, 0x33];
+  if(!window.boot_unlocked) {
+    console.log("[MEM_DUMP] Sector 0x60 verification in progress...");
+  }
+  return String(_0x4a1.map(x => x.toString(16)).join(':'));
+}
+window.addEventListener('tick', () => sys_render_clock(Date.now()));
+// END OF CORE LOGIC
+`;
+
+      content.innerHTML = `<div style="padding: 15px; color: #98c379; font-family: monospace; white-space: pre-wrap; font-size: 0.8rem; height: 100%; overflow-y: auto;">
+${escapeHtml(rawCode)}<span id="script-tag-btn" onclick="unlockBootFolder()" style="color: #e5c07b; font-weight: bold; cursor: pointer; text-decoration: underline;">&lt;/script&gt;</span>
+</div>`;
+    }
+
+    function unlockBootFolder() {
+      localStorage.setItem('boot_unlocked', 'true');
+      alert("[SYSTEM] C:\\Boot\\ 디렉터리의 2차 보안 오버라이드가 승인되었습니다!");
+      
+      const content = document.getElementById('viewer-content');
+      content.innerHTML = `<div style="padding: 20px; color: #00ff66; font-family: monospace;">
+[SUCCESS] Access Key extracted successfully.
+C:\\Boot\\ sector permissions updated: [UNLOCKED]
+</div>`;
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // --- System_Analyzer.exe ---
     const scanLogs = [
       "[01/15] [INFO] Initializing System_Analyzer v3.02...",
       "[02/15] [INFO] Target directory set: C:\\Program Files\\",
@@ -79,54 +225,38 @@
       "[15/15] [INFO] Scan complete. Outputting diagnostic summary to viewer..."
     ];
 
-    let isScanning = false;
-
     function runAnalyzer() {
-      if (isScanning) return;
-      isScanning = true;
-
-      const viewer = document.getElementById('viewer-box');
+      currentApp = "System_Analyzer.exe";
+      if (clockInterval) clearInterval(clockInterval);
+      
+      document.getElementById('file-title').innerText = "System_Analyzer.exe";
       const content = document.getElementById('viewer-content');
-      document.getElementById('file-title').innerText = "System_Analyzer.exe - Executing...";
-      viewer.style.display = 'block';
+      document.getElementById('viewer-box').style.display = 'block';
 
       content.innerHTML = `<div>SYSTEM SCAN IN PROGRESS...</div>
                            <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
-                           <div id="log-zone" style="color: #aaa; font-size: 0.85rem;"></div>`;
+                           <div id="log-zone" style="color: #aaa; font-size: 0.8rem; height: 200px; overflow-y: auto;"></div>`;
 
       const fill = document.getElementById('fill');
       const logZone = document.getElementById('log-zone');
       let step = 0;
 
-      // 15개 로그 연출하며 스캔 진행
       const interval = setInterval(() => {
         if (step < scanLogs.length) {
           fill.style.width = Math.floor(((step + 1) / scanLogs.length) * 100) + '%';
           logZone.innerHTML += scanLogs[step] + '<br>';
           logZone.scrollTop = logZone.scrollHeight;
-          console.log("%c" + scanLogs[step], "color: #e5c07b;");
           step++;
         } else {
           clearInterval(interval);
-          
-          // 스캔 완료 1차 결과 출력
           setTimeout(() => {
             content.innerHTML = `<span style="color: #ff5555; font-weight: bold;">경고: C:\\Boot\\ 접근을 위한 2차 오버라이드 암호 키가 분실됨.</span>\n\n`;
-            
-            // 안 나가고 조금 기다리면 추가 출력되는 딜레이 연출!
             setTimeout(() => {
               content.innerHTML += `<span style="color: #8ab4f8; font-style: italic;">'부팅... 폴더... 해답... 시계... 데이터... 찾기...'</span>`;
-              isScanning = false;
             }, 3500);
-
           }, 600);
         }
-      }, 250);
-    }
-
-    function closeViewer() {
-      if (isScanning) return;
-      document.getElementById('viewer-box').style.display = 'none';
+      }, 200);
     }
   </script>
 </body>
