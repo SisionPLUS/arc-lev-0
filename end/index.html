@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>CHAPTER 1 :: LIVE END SYSTEM</title>
+  <style>
+    body {
+      background-color: #050505;
+      color: #00ff66;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px;
+      user-select: none;
+    }
+    .main-box {
+      border: 1px solid #00ff66;
+      padding: 30px;
+      background-color: #000;
+      box-shadow: 0 0 20px rgba(0, 255, 102, 0.2);
+      width: 100%;
+      max-width: 650px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .status-404 { border-color: #ff5555; box-shadow: 0 0 20px rgba(255, 85, 85, 0.2); color: #ff5555; }
+    .status-403 { border-color: #ffaa00; box-shadow: 0 0 20px rgba(255, 170, 0, 0.2); color: #ffaa00; }
+    
+    .live-monitor {
+      width: 100%;
+      max-width: 650px;
+      border: 1px dashed #444;
+      padding: 15px;
+      background-color: #0a0a0a;
+    }
+    .key-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-bottom: 1px solid #222;
+      font-size: 0.85rem;
+    }
+    .key-active { color: #00ff66; }
+    .key-used { color: #ff5555; text-decoration: line-through; }
+    .next-link {
+      margin-top: 20px;
+      display: inline-block;
+      color: #8ab4f8;
+      font-weight: bold;
+      font-size: 1.2rem;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="main-box" class="main-box">
+    <h2>[CONNECTING TO GITHUB PAGES DB...]</h2>
+    <p>시스템 키 검증 데이터 로딩 중...</p>
+  </div>
+
+  <div class="live-monitor">
+    <div style="color: #aaa; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 5px;">
+      🌐 GITHUB LIVE KEY STATUS
+    </div>
+    <div id="key-list"></div>
+  </div>
+
+  <script>
+    // URL 매개변수 또는 경로에서 16자리 코드 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const pathSegments = window.location.pathname.split('/').filter(Boolean);
+    
+    let inputCode = urlParams.get('code');
+    if (!inputCode && pathSegments.length > 0) {
+      const lastSegment = pathSegments[pathSegments.length - 1];
+      if (lastSegment !== 'end' && lastSegment !== 'index.html') {
+        inputCode = lastSegment;
+      }
+    }
+
+    const mainBox = document.getElementById('main-box');
+    const keyList = document.getElementById('key-list');
+
+    // 16자리 랜덤 키 생성기 (추가 키 생성용)
+    function generateRandomKey() {
+      const chars = '0123456789abcdef';
+      let k = '';
+      for (let i = 0; i < 16; i++) k += chars.charAt(Math.floor(Math.random() * chars.length));
+      return k;
+    }
+
+    async function initEndSystem() {
+      try {
+        // 1. keys.json 가져오기
+        const res = await fetch('./keys.json');
+        let keysData = await res.json();
+
+        // 로컬 파기 상태 동기화
+        let usedKeysInStorage = JSON.parse(localStorage.getItem('gh_used_keys') || '[]');
+
+        // 로컬에 추가된 키가 있다면 병합
+        let localExtraKeys = JSON.parse(localStorage.getItem('gh_extra_keys') || '[]');
+        keysData = [...keysData, ...localExtraKeys];
+
+        // 상태 업데이트
+        keysData.forEach(k => {
+          if (usedKeysInStorage.includes(k.key)) {
+            k.used = true;
+          }
+        });
+
+        // 2. 입력 코드 검증
+        if (!inputCode) {
+          renderUI(404, "404 NOT FOUND", "보안 터널 코드가 제공되지 않았습니다.");
+        } else {
+          const targetKey = keysData.find(k => k.key === inputCode);
+
+          if (!targetKey) {
+            // 키 목록에 없는 경우 -> 404
+            renderUI(404, "404 NOT FOUND", "존재하지 않거나 유효하지 않은 키입니다.");
+          } else if (targetKey.used) {
+            // 이미 사용된 키 -> 403
+            renderUI(403, "403 FORBIDDEN", "이 터널 키는 이미 사용 후 파기되었습니다!");
+          } else {
+            // 사용 성공!! -> 403 상태로 파기 및 새 키 1개 보충
+            targetKey.used = true;
+            usedKeysInStorage.push(inputCode);
+            localStorage.setItem('gh_used_keys', JSON.stringify(usedKeysInStorage));
+
+            // 새 키 1개 자동 생성 후 보충
+            const newGeneratedKey = generateRandomKey();
+            localExtraKeys.push({ key: newGeneratedKey, used: false, usedAt: null });
+            localStorage.setItem('gh_extra_keys', JSON.stringify(localExtraKeys));
+            
+            keysData.push({ key: newGeneratedKey, used: false, usedAt: null });
+
+            renderUI(200, "CHAPTER 1 CLEAR", `
+              <p>축하합니다! 챕터 1 해독에 성공하셨습니다.</p>
+              <p style="color: #ffaa00; font-size: 0.85rem;">※ 입력한 키는 [COMPLETED] 상태로 즉시 파기되었으며, 1개의 새로운 키가 생성되었습니다.</p>
+              <a href="https://arc-lev-1.kro.kr" class="next-link">👉 챕터 2 이동: arc-lev-1.kro.kr</a>
+            `);
+          }
+        }
+
+        // 3. 하단 키 모니터링 화면 렌더링
+        renderKeyMonitor(keysData);
+
+      } catch (err) {
+        renderUI(404, "SYSTEM ERROR", "keys.json 데이터를 불러오는 데 실패했습니다.");
+      }
+    }
+
+    function renderKeyMonitor(keys) {
+      keyList.innerHTML = '';
+      keys.forEach((k, idx) => {
+        const item = document.createElement('div');
+        item.className = 'key-item ' + (k.used ? 'key-used' : 'key-active');
+        item.innerHTML = `
+          <span>#${idx + 1} [${k.key}]</span>
+          <span>${k.used ? '[COMPLETED]' : '[ACTIVE]'}</span>
+        `;
+        keyList.appendChild(item);
+      });
+    }
+
+    function renderUI(status, title, bodyHTML) {
+      mainBox.className = 'main-box';
+      if (status === 404) mainBox.classList.add('status-404');
+      if (status === 403) mainBox.classList.add('status-403');
+
+      mainBox.innerHTML = `
+        <h1 style="margin: 0 0 15px 0;">${title}</h1>
+        <div>${bodyHTML}</div>
+      `;
+    }
+
+    initEndSystem();
+  </script>
+</body>
+</html>
