@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>CHAPTER 1 :: LIVE END SYSTEM</title>
+  <title>CHAPTER 1 :: END</title>
   <style>
     body {
       background-color: #050505;
@@ -39,7 +39,7 @@
     .key-item {
       display: flex;
       justify-content: space-between;
-      padding: 6px 10px;
+      padding: 8px 12px;
       border-bottom: 1px solid #222;
       font-size: 0.85rem;
     }
@@ -64,13 +64,12 @@
 
   <div class="live-monitor">
     <div style="color: #aaa; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 5px;">
-      🌐 GITHUB LIVE KEY STATUS
+      🌐 Chapter 1 :: END
     </div>
     <div id="key-list"></div>
   </div>
 
   <script>
-    // URL 매개변수 또는 경로에서 16자리 코드 추출
     const urlParams = new URLSearchParams(window.location.search);
     const pathSegments = window.location.pathname.split('/').filter(Boolean);
     
@@ -85,68 +84,48 @@
     const mainBox = document.getElementById('main-box');
     const keyList = document.getElementById('key-list');
 
-    // 16자리 랜덤 키 생성기 (추가 키 생성용)
-    function generateRandomKey() {
-      const chars = '0123456789abcdef';
-      let k = '';
-      for (let i = 0; i < 16; i++) k += chars.charAt(Math.floor(Math.random() * chars.length));
-      return k;
-    }
-
     async function initEndSystem() {
       try {
-        // 1. keys.json 가져오기
         const res = await fetch('./keys.json');
         let keysData = await res.json();
 
-        // 로컬 파기 상태 동기화
         let usedKeysInStorage = JSON.parse(localStorage.getItem('gh_used_keys') || '[]');
+        const dynamicValidKey = localStorage.getItem('valid_end_key');
 
-        // 로컬에 추가된 키가 있다면 병합
-        let localExtraKeys = JSON.parse(localStorage.getItem('gh_extra_keys') || '[]');
-        keysData = [...keysData, ...localExtraKeys];
-
-        // 상태 업데이트
         keysData.forEach(k => {
           if (usedKeysInStorage.includes(k.key)) {
             k.used = true;
           }
         });
 
-        // 2. 입력 코드 검증
         if (!inputCode) {
           renderUI(404, "404 NOT FOUND", "보안 터널 코드가 제공되지 않았습니다.");
         } else {
-          const targetKey = keysData.find(k => k.key === inputCode);
+          const isMatchJson = keysData.find(k => k.key === inputCode);
+          const isMatchDynamic = (dynamicValidKey && dynamicValidKey === inputCode);
 
-          if (!targetKey) {
-            // 키 목록에 없는 경우 -> 404
+          if (!isMatchJson && !isMatchDynamic) {
             renderUI(404, "404 NOT FOUND", "존재하지 않거나 유효하지 않은 키입니다.");
-          } else if (targetKey.used) {
-            // 이미 사용된 키 -> 403
+          } else if (usedKeysInStorage.includes(inputCode)) {
             renderUI(403, "403 FORBIDDEN", "이 터널 키는 이미 사용 후 파기되었습니다!");
           } else {
-            // 사용 성공!! -> 403 상태로 파기 및 새 키 1개 보충
-            targetKey.used = true;
             usedKeysInStorage.push(inputCode);
             localStorage.setItem('gh_used_keys', JSON.stringify(usedKeysInStorage));
 
-            // 새 키 1개 자동 생성 후 보충
-            const newGeneratedKey = generateRandomKey();
-            localExtraKeys.push({ key: newGeneratedKey, used: false, usedAt: null });
-            localStorage.setItem('gh_extra_keys', JSON.stringify(localExtraKeys));
-            
-            keysData.push({ key: newGeneratedKey, used: false, usedAt: null });
+            if (isMatchJson) {
+              isMatchJson.used = true;
+            } else if (isMatchDynamic) {
+              keysData.push({ key: inputCode, used: true });
+            }
 
             renderUI(200, "CHAPTER 1 CLEAR", `
-              <p>축하합니다! 챕터 1 해독에 성공하셨습니다.</p>
-              <p style="color: #ffaa00; font-size: 0.85rem;">※ 입력한 키는 [COMPLETED] 상태로 즉시 파기되었으며, 1개의 새로운 키가 생성되었습니다.</p>
+              <p>You Cleard Chapter1. 당신은 챕터 1 을 클리어하셨습니다.</p>
+              <p style="color: #ffaa00; font-size: 0.85rem;">※ 입력한 키는 즉시 파기되었습니다.</p>
               <a href="https://arc-lev-1.kro.kr" class="next-link">👉 챕터 2 이동: arc-lev-1.kro.kr</a>
             `);
           }
         }
 
-        // 3. 하단 키 모니터링 화면 렌더링
         renderKeyMonitor(keysData);
 
       } catch (err) {
@@ -154,13 +133,14 @@
       }
     }
 
+    // ⭐ 키 값은 1도 안 보여주고 상태만 깔끔하게 출력!
     function renderKeyMonitor(keys) {
       keyList.innerHTML = '';
       keys.forEach((k, idx) => {
         const item = document.createElement('div');
         item.className = 'key-item ' + (k.used ? 'key-used' : 'key-active');
         item.innerHTML = `
-          <span>#${idx + 1} [${k.key}]</span>
+          <span>KEY SLOT #${String(idx + 1).padStart(2, '0')}</span>
           <span>${k.used ? '[COMPLETED]' : '[ACTIVE]'}</span>
         `;
         keyList.appendChild(item);
