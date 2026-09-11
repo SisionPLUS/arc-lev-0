@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>CHAPTER 1 :: END</title>
+  <title>CHAPTER 1 :: LIVE END SYSTEM</title>
   <style>
     body {
       background-color: #050505;
@@ -63,7 +63,7 @@
   </div>
 
   <div class="live-monitor">
-    <div style="color: #aaa; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 5px;">
+    <div style="color: #8ab4f8; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #444; padding-bottom: 5px;">
       🌐 Chapter 1 :: END
     </div>
     <div id="key-list"></div>
@@ -115,12 +115,13 @@
             if (isMatchJson) {
               isMatchJson.used = true;
             } else if (isMatchDynamic) {
-              keysData.push({ key: inputCode, used: true });
+              const firstActiveSlot = keysData.find(k => !k.used);
+              if (firstActiveSlot) firstActiveSlot.used = true;
             }
 
             renderUI(200, "CHAPTER 1 CLEAR", `
-              <p>You Cleard Chapter1. 당신은 챕터 1 을 클리어하셨습니다.</p>
-              <p style="color: #ffaa00; font-size: 0.85rem;">※ 입력한 키는 즉시 파기되었습니다.</p>
+              <p>축하합니다! 챕터 1 해독에 성공하셨습니다.</p>
+              <p style="color: #ffaa00; font-size: 0.85rem;">※ 입력한 키는 [COMPLETED] 상태로 즉시 파기되었습니다.</p>
               <a href="https://arc-lev-1.kro.kr" class="next-link">👉 챕터 2 이동: arc-lev-1.kro.kr</a>
             `);
           }
@@ -133,7 +134,6 @@
       }
     }
 
-    // ⭐ 키 값은 1도 안 보여주고 상태만 깔끔하게 출력!
     function renderKeyMonitor(keys) {
       keyList.innerHTML = '';
       keys.forEach((k, idx) => {
