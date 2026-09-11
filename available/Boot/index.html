@@ -2,12 +2,133 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Boot</title>
+  <title>C:\Boot의 색인</title>
   <style>
-    body { background-color: #000; color: #fff; font-family: monospace; height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; }
+    body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 20px 40px; user-select: none; }
+    h1 { font-size: 2rem; font-weight: 600; margin-bottom: 20px; }
+    table { width: 100%; max-width: 900px; border-collapse: collapse; font-size: 0.95rem; }
+    th { font-weight: 600; padding: 8px; text-align: left; color: #fff; }
+    .th-name { width: 55%; } .th-size { width: 15%; text-align: right; } .th-date { width: 30%; text-align: right; }
+    td { padding: 6px 8px; } td.size, td.date { text-align: right; color: #aaa; }
+    a { color: #fff; text-decoration: underline; cursor: pointer; } a:hover { color: #8ab4f8; }
+
+    #viewer-box {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 880px;
+      height: 320px;
+      background-color: #111;
+      border: 1px solid #fff;
+      padding: 15px 20px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+    #viewer-title { font-weight: bold; border-bottom: 1px solid #444; padding-bottom: 5px; margin-bottom: 10px; color: #8ab4f8; display: flex; justify-content: space-between; }
+    #viewer-content { font-family: monospace; white-space: pre-wrap; color: #fff; font-size: 0.85rem; line-height: 1.4; height: 250px; overflow-y: auto; word-break: break-all; }
+    .close-btn { cursor: pointer; color: #ff5555; }
   </style>
 </head>
 <body>
-  <div>접근 권한이 없습니다.</div>
+
+  <div id="content" style="display: none;">
+    <h1>Index of /Boot/</h1>
+
+    <table>
+      <thead>
+        <tr><th class="th-name">이름</th><th class="th-size">크기</th><th class="th-date">수정된 날짜</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a onclick="showBootIni()">📄 boot.ini</a></td><td class="size">1.2 kB</td><td class="date">26. 9. 8. 오전 09:20:11</td></tr>
+        <tr><td><a onclick="showBcdEdit()">📄 bcdedit.sys</a></td><td class="size">18.4 kB</td><td class="date">26. 9. 8. 오전 09:22:45</td></tr>
+        <tr><td><a onclick="showKernel()">📄 kernel.sys</a></td><td class="size">64.0 kB</td><td class="date">26. 9. 8. 오전 09:25:00</td></tr>
+      </tbody>
+    </table>
+
+    <div id="viewer-box">
+      <div id="viewer-title">
+        <span id="file-title">FILE</span>
+        <span class="close-btn" onclick="closeViewer()">[X] CLOSE</span>
+      </div>
+      <div id="viewer-content"></div>
+    </div>
+  </div>
+
+  <script>
+    // boot_unlocked 플래그 없으면 알림 없이 바로 루트(C:\)로 차단 리다이렉트
+    (function() {
+      if (localStorage.getItem('boot_unlocked') === 'true') {
+        document.getElementById('content').style.display = 'block';
+      } else {
+        window.location.href = "../";
+      }
+    })();
+
+    function closeViewer() {
+      document.getElementById('viewer-box').style.display = 'none';
+    }
+
+    function showBootIni() {
+      document.getElementById('file-title').innerText = "boot.ini";
+      const content = document.getElementById('viewer-content');
+      content.innerText = `[boot loader]
+timeout=30
+default=multi(0)disk(0)rdisk(0)partition(1)\\WINDOWS
+[operating systems]
+multi(0)disk(0)rdisk(0)partition(1)\\WINDOWS="ARG OS System Core" /fastdetect
+
+MDExMTAwMTEwMTExMTAwMTAxMTEwMDExMDAxMDExMTAwMTEwMTEwMDAxMTAwMTAxMDExMDExMTAwMTExMDAxMDAxMTAwMTAxMDExMDEwMTEwMDEwMDAwMDAxMDEwMTAwMDEwMDAwMDEwMDEwMDAwMDAxMDEwMDAwMDEwMDExMDEwMTAxMDEwMTAxMDAwMTAwMDAxMDAwMDAwMTAxMTAwMTAxMDEwMDEwMDEwMDExMTEwMTAwMTEwMTAxMDAwMTAxMDEwMDExMDEwMDEwMDAwMDAxMDAxMDExMDEwMDAwMTEwMTAwMDEwMTAxMDAxMDAwMDEwMDAwMTE=`;
+      document.getElementById('viewer-box').style.display = 'block';
+    }
+
+    function showBcdEdit() {
+      document.getElementById('file-title').innerText = "bcdedit.sys";
+      const content = document.getElementById('viewer-content');
+      content.innerText = `MEMORY DUMP TABLE [SECTOR 0x7000 - 0x8000]
+
+0x7F10: 0x1A42  0x8B01  0x00FF  0xC32E
+0x7F14: 0x4F11  0x99A2  0x102B  0x77E1
+0x7F18: 0x003A  0x44B1  0x2210  0x9000
+0x7F2A: 0x39B4
+0x7F30: 0x112F  0xABCD  0x4A10  0xFF21
+0x7F40: 0x55A1  0x0000  0x1234  0x88B2`;
+      document.getElementById('viewer-box').style.display = 'block';
+    }
+
+    function showKernel() {
+      document.getElementById('file-title').innerText = "kernel.sys";
+      const content = document.getElementById('viewer-content');
+      content.innerText = `[KERNEL LOCK Active]
+BITWISE XOR REQUIRED.
+(TARGET ^ 0xFFFF)`;
+      document.getElementById('viewer-box').style.display = 'block';
+    }
+
+    window.kernel_override = function(hexInput) {
+      if (!hexInput) return;
+
+      if (String(hexInput).toUpperCase() === "0XC64B") {
+        const chars = '0123456789abcdef';
+        let realCode = '';
+        for (let i = 0; i < 16; i++) {
+          realCode += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        const reversedCode = realCode.split('').reverse().join('');
+
+        console.log("%c[Info] Reverse, Code, End, Left", "color: #ffaa00; font-weight: bold; font-size: 1.1rem;");
+        console.log("%c[SUCCESS] arc-lev-0.kro.kr/end/" + reversedCode, "color: #00ff66; font-size: 1.2rem; font-weight: bold;");
+
+        const content = document.getElementById('viewer-content');
+        document.getElementById('file-title').innerText = "kernel.sys";
+        content.innerHTML = `<div style="padding: 20px; color: #00ff66;">
+[SUCCESS] Signal Outjected.
+</div>`;
+        document.getElementById('viewer-box').style.display = 'block';
+      }
+    };
+  </script>
 </body>
 </html>
