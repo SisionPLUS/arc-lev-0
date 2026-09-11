@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    // /end/16자리 형태의 접근인 경우 end/index.html로 리다이렉트
+    const path = window.location.pathname;
+    if (path.includes('/end/')) {
+      const code = path.split('/end/')[1];
+      window.location.href = '/end/?code=' + code;
+    }
+  </script>
+</head>
+<body></body>
+</html>
