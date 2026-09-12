@@ -106,39 +106,40 @@ BITWISE XOR REQUIRED.
     }
 
     window.kernel_override = async function(hexInput) {
-      if (!hexInput) return;
+  if (!hexInput) return;
 
-      if (String(hexInput).toUpperCase() === "0XC64B") {
-        try {
-          const res = await fetch('../end/keys.json');
-          const keysData = await res.json();
+  if (String(hexInput).toUpperCase() === "0XC64B") {
+    try {
+      // ⭐ 핵심 수정: 루트 절대 경로('/end/keys.json')로 변경!
+      const res = await fetch('/end/keys.json');
+      const keysData = await res.json();
 
-          const usedKeys = JSON.parse(localStorage.getItem('gh_used_keys') || '[]');
-          const availableKeyObj = keysData.find(k => !k.used && !usedKeys.includes(k.key));
+      const usedKeys = JSON.parse(localStorage.getItem('gh_used_keys') || '[]');
+      const availableKeyObj = keysData.find(k => !k.used && !usedKeys.includes(k.key));
 
-          if (!availableKeyObj) {
-            console.log("%c[ERROR] 사용 가능한 키가 모두 소진되었습니다.", "color: #ff5555; font-weight: bold;");
-            return;
-          }
+      if (!availableKeyObj) {
+        console.log("%c[ERROR] 사용 가능한 키가 모두 소진되었습니다.", "color: #ff5555; font-weight: bold;");
+        return;
+      }
 
-          const realCode = availableKeyObj.key;
-          const reversedCode = realCode.split('').reverse().join('');
+      const realCode = availableKeyObj.key;
+      const reversedCode = realCode.split('').reverse().join('');
 
-          console.log("%c[Info] Reverse, Code, End, Left", "color: #ffaa00; font-weight: bold; font-size: 1.1rem;");
-          console.log("%c[SUCCESS] arc-lev-0.kro.kr/end/" + reversedCode, "color: #00ff66; font-size: 1.2rem; font-weight: bold;");
+      console.log("%c[Info] Reverse, Code, End, Left", "color: #ffaa00; font-weight: bold; font-size: 1.1rem;");
+      console.log("%c[SUCCESS] arc-lev-0.kro.kr/end/" + reversedCode, "color: #00ff66; font-size: 1.2rem; font-weight: bold;");
 
-          const content = document.getElementById('viewer-content');
-          document.getElementById('file-title').innerText = "kernel.sys";
-          content.innerHTML = `<div style="padding: 20px; color: #00ff66;">
+      const content = document.getElementById('viewer-content');
+      document.getElementById('file-title').innerText = "kernel.sys";
+      content.innerHTML = `<div style="padding: 20px; color: #00ff66;">
 [SUCCESS] Signal Outjected.
 </div>`;
-          document.getElementById('viewer-box').style.display = 'block';
+      document.getElementById('viewer-box').style.display = 'block';
 
-        } catch (err) {
-          console.error("keys.json fetch error:", err);
-        }
-      }
-    };
+    } catch (err) {
+      console.error("keys.json fetch error:", err);
+    }
+  }
+};
   </script>
 </body>
 </html>
