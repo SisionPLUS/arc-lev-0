@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>CHAPTER 1 :: LIVE END SYSTEM</title>
+  <title>CHAPTER 1 :: END</title>
   <style>
     body {
       background-color: #050505;
@@ -58,7 +58,7 @@
 <body>
 
   <div id="main-box" class="main-box">
-    <h2>[CONNECTING TO GITHUB PAGES DB...]</h2>
+    <h2>[CONNECTING TO SYSTEM DB...]</h2>
     <p>시스템 키 검증 데이터 로딩 중...</p>
   </div>
 
@@ -90,7 +90,6 @@
         let keysData = await res.json();
 
         let usedKeysInStorage = JSON.parse(localStorage.getItem('gh_used_keys') || '[]');
-        const dynamicValidKey = localStorage.getItem('valid_end_key');
 
         keysData.forEach(k => {
           if (usedKeysInStorage.includes(k.key)) {
@@ -101,23 +100,17 @@
         if (!inputCode) {
           renderUI(404, "404 NOT FOUND", "보안 터널 코드가 제공되지 않았습니다.");
         } else {
-          const isMatchJson = keysData.find(k => k.key === inputCode);
-          const isMatchDynamic = (dynamicValidKey && dynamicValidKey === inputCode);
+          const targetKeyObj = keysData.find(k => k.key === inputCode);
 
-          if (!isMatchJson && !isMatchDynamic) {
+          if (!targetKeyObj) {
             renderUI(404, "404 NOT FOUND", "존재하지 않거나 유효하지 않은 키입니다.");
-          } else if (usedKeysInStorage.includes(inputCode)) {
+          } else if (targetKeyObj.used) {
             renderUI(403, "403 FORBIDDEN", "이 터널 키는 이미 사용 후 파기되었습니다!");
           } else {
+            // 키 사용 완료 처리
+            targetKeyObj.used = true;
             usedKeysInStorage.push(inputCode);
             localStorage.setItem('gh_used_keys', JSON.stringify(usedKeysInStorage));
-
-            if (isMatchJson) {
-              isMatchJson.used = true;
-            } else if (isMatchDynamic) {
-              const firstActiveSlot = keysData.find(k => !k.used);
-              if (firstActiveSlot) firstActiveSlot.used = true;
-            }
 
             renderUI(200, "CHAPTER 1 CLEAR", `
               <p>축하합니다! 챕터 1 해독에 성공하셨습니다.</p>
