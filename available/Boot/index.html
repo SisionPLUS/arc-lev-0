@@ -41,9 +41,9 @@
         <tr><th class="th-name">이름</th><th class="th-size">크기</th><th class="th-date">수정된 날짜</th></tr>
       </thead>
       <tbody>
-        <tr><td><a onclick="showBootIni()">📄 boot.ini</a></td><td class="size">1.2 kB</td><td class="date">26. 9. 8. 오전 09:20:11</td></tr>
-        <tr><td><a onclick="showBcdEdit()">📄 bcdedit.sys</a></td><td class="size">18.4 kB</td><td class="date">26. 9. 8. 오전 09:22:45</td></tr>
-        <tr><td><a onclick="showKernel()">📄 kernel.sys</a></td><td class="size">64.0 kB</td><td class="date">26. 9. 8. 오전 09:25:00</td></tr>
+        <tr><td><a onclick="showBootIni()">boot.ini</a></td><td class="size">1.2 kB</td><td class="date">26. 9. 8. 오전 09:20:11</td></tr>
+        <tr><td><a onclick="showBcdEdit()">bcdedit.sys</a></td><td class="size">18.4 kB</td><td class="date">26. 9. 8. 오전 09:22:45</td></tr>
+        <tr><td><a onclick="showKernel()">kernel.sys</a></td><td class="size">64.0 kB</td><td class="date">26. 9. 8. 오전 09:25:00</td></tr>
       </tbody>
     </table>
 
@@ -57,7 +57,6 @@
   </div>
 
   <script>
-    // boot_unlocked 플래그 없으면 알림 없이 바로 루트(C:\)로 차단 리다이렉트
     (function() {
       if (localStorage.getItem('boot_unlocked') === 'true') {
         document.getElementById('content').style.display = 'block';
@@ -106,27 +105,38 @@ BITWISE XOR REQUIRED.
       document.getElementById('viewer-box').style.display = 'block';
     }
 
-    window.kernel_override = function(hexInput) {
+    window.kernel_override = async function(hexInput) {
       if (!hexInput) return;
 
       if (String(hexInput).toUpperCase() === "0XC64B") {
-        const chars = '0123456789abcdef';
-        let realCode = '';
-        for (let i = 0; i < 16; i++) {
-          realCode += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
+        try {
+          const res = await fetch('../end/keys.json');
+          const keysData = await res.json();
 
-        const reversedCode = realCode.split('').reverse().join('');
+          const usedKeys = JSON.parse(localStorage.getItem('gh_used_keys') || '[]');
+          const availableKeyObj = keysData.find(k => !k.used && !usedKeys.includes(k.key));
 
-        console.log("%c[Info] Reverse, Code, End, Left", "color: #ffaa00; font-weight: bold; font-size: 1.1rem;");
-        console.log("%c[SUCCESS] arc-lev-0.kro.kr/end/" + reversedCode, "color: #00ff66; font-size: 1.2rem; font-weight: bold;");
+          if (!availableKeyObj) {
+            console.log("%c[ERROR] 사용 가능한 키가 모두 소진되었습니다.", "color: #ff5555; font-weight: bold;");
+            return;
+          }
 
-        const content = document.getElementById('viewer-content');
-        document.getElementById('file-title').innerText = "kernel.sys";
-        content.innerHTML = `<div style="padding: 20px; color: #00ff66;">
+          const realCode = availableKeyObj.key;
+          const reversedCode = realCode.split('').reverse().join('');
+
+          console.log("%c[Info] Reverse, Code, End, Left", "color: #ffaa00; font-weight: bold; font-size: 1.1rem;");
+          console.log("%c[SUCCESS] arc-lev-0.kro.kr/end/" + reversedCode, "color: #00ff66; font-size: 1.2rem; font-weight: bold;");
+
+          const content = document.getElementById('viewer-content');
+          document.getElementById('file-title').innerText = "kernel.sys";
+          content.innerHTML = `<div style="padding: 20px; color: #00ff66;">
 [SUCCESS] Signal Outjected.
 </div>`;
-        document.getElementById('viewer-box').style.display = 'block';
+          document.getElementById('viewer-box').style.display = 'block';
+
+        } catch (err) {
+          console.error("keys.json fetch error:", err);
+        }
       }
     };
   </script>
